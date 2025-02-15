@@ -27,6 +27,7 @@ declare global {
     orderDate: string;
     status: "주문 완료" | "배송 중" | "배송 완료" | "취소됨";
   }
+  type TKey = "productList" | "gamecharacters" | "customerOrderList";
 }
 
 export {};

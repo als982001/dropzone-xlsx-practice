@@ -1,6 +1,6 @@
 const GameCharacters: IGameCharacter[] = [
   {
-    characterId: "C1001",
+    id: "C1001",
     name: "아르테미스",
     class: "궁수",
     level: 45,
@@ -11,7 +11,7 @@ const GameCharacters: IGameCharacter[] = [
     creationDate: "2024-01-15",
   },
   {
-    characterId: "C1002",
+    id: "C1002",
     name: "발키리",
     class: "전사",
     level: 50,
@@ -22,7 +22,7 @@ const GameCharacters: IGameCharacter[] = [
     creationDate: "2024-01-10",
   },
   {
-    characterId: "C1003",
+    id: "C1003",
     name: "에스퍼",
     class: "마법사",
     level: 42,
@@ -33,7 +33,7 @@ const GameCharacters: IGameCharacter[] = [
     creationDate: "2024-01-20",
   },
   {
-    characterId: "C1004",
+    id: "C1004",
     name: "쉐도우",
     class: "암살자",
     level: 47,
@@ -44,7 +44,7 @@ const GameCharacters: IGameCharacter[] = [
     creationDate: "2024-01-25",
   },
   {
-    characterId: "C1005",
+    id: "C1005",
     name: "팔라딘",
     class: "성기사",
     level: 55,

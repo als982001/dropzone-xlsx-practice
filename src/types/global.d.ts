@@ -1,6 +1,6 @@
 declare global {
   interface IGameCharacter {
-    characterId: string;
+    id: string;
     name: string;
     class: string;
     level: number;
@@ -11,7 +11,7 @@ declare global {
     creationDate: string;
   }
   interface IProduct {
-    productId: string;
+    id: string;
     productName: string;
     category: string;
     price: number;
@@ -19,7 +19,7 @@ declare global {
     registeredDate: string;
   }
   interface ICustomerOrder {
-    orderId: string;
+    id: string;
     customerName: string;
     productName: string;
     quantity: number;

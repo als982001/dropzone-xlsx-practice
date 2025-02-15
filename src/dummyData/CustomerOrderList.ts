@@ -1,6 +1,6 @@
 const CustomerOrders: ICustomerOrder[] = [
   {
-    orderId: "O1001",
+    id: "O1001",
     customerName: "김민수",
     productName: "무선 이어폰",
     quantity: 1,
@@ -9,7 +9,7 @@ const CustomerOrders: ICustomerOrder[] = [
     status: "배송 중",
   },
   {
-    orderId: "O1002",
+    id: "O1002",
     customerName: "박지윤",
     productName: "게이밍 키보드",
     quantity: 1,
@@ -18,7 +18,7 @@ const CustomerOrders: ICustomerOrder[] = [
     status: "주문 완료",
   },
   {
-    orderId: "O1003",
+    id: "O1003",
     customerName: "이준호",
     productName: "스마트 워치",
     quantity: 2,
@@ -27,7 +27,7 @@ const CustomerOrders: ICustomerOrder[] = [
     status: "배송 완료",
   },
   {
-    orderId: "O1004",
+    id: "O1004",
     customerName: "최서연",
     productName: "27인치 모니터",
     quantity: 1,
@@ -36,7 +36,7 @@ const CustomerOrders: ICustomerOrder[] = [
     status: "주문 완료",
   },
   {
-    orderId: "O1005",
+    id: "O1005",
     customerName: "정우진",
     productName: "고속 무선 충전기",
     quantity: 3,

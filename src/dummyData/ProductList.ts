@@ -1,6 +1,6 @@
 const ProductList: IProduct[] = [
   {
-    productId: "P1001",
+    id: "P1001",
     productName: "무선 블루투스 이어폰",
     category: "전자기기",
     price: 129000,
@@ -8,7 +8,7 @@ const ProductList: IProduct[] = [
     registeredDate: "2024-02-20",
   },
   {
-    productId: "P1002",
+    id: "P1002",
     productName: "게이밍 마우스",
     category: "컴퓨터 주변기기",
     price: 59000,
@@ -16,7 +16,7 @@ const ProductList: IProduct[] = [
     registeredDate: "2024-02-18",
   },
   {
-    productId: "P1003",
+    id: "P1003",
     productName: "기계식 키보드",
     category: "컴퓨터 주변기기",
     price: 109000,
@@ -24,7 +24,7 @@ const ProductList: IProduct[] = [
     registeredDate: "2024-02-15",
   },
   {
-    productId: "P1004",
+    id: "P1004",
     productName: "스마트 워치",
     category: "전자기기",
     price: 249000,
@@ -32,7 +32,7 @@ const ProductList: IProduct[] = [
     registeredDate: "2024-02-12",
   },
   {
-    productId: "P1005",
+    id: "P1005",
     productName: "27인치 모니터",
     category: "컴퓨터",
     price: 349000,
@@ -40,7 +40,7 @@ const ProductList: IProduct[] = [
     registeredDate: "2024-02-10",
   },
   {
-    productId: "P1006",
+    id: "P1006",
     productName: "USB-C 허브",
     category: "컴퓨터 주변기기",
     price: 39000,
@@ -48,7 +48,7 @@ const ProductList: IProduct[] = [
     registeredDate: "2024-02-08",
   },
   {
-    productId: "P1007",
+    id: "P1007",
     productName: "외장 SSD 1TB",
     category: "저장장치",
     price: 159000,
@@ -56,7 +56,7 @@ const ProductList: IProduct[] = [
     registeredDate: "2024-02-06",
   },
   {
-    productId: "P1008",
+    id: "P1008",
     productName: "고속 무선 충전기",
     category: "전자기기",
     price: 49000,
@@ -64,7 +64,7 @@ const ProductList: IProduct[] = [
     registeredDate: "2024-02-04",
   },
   {
-    productId: "P1009",
+    id: "P1009",
     productName: "4K 웹캠",
     category: "컴퓨터 주변기기",
     price: 129000,
@@ -72,7 +72,7 @@ const ProductList: IProduct[] = [
     registeredDate: "2024-02-02",
   },
   {
-    productId: "P1010",
+    id: "P1010",
     productName: "전자책 리더기",
     category: "전자기기",
     price: 199000,

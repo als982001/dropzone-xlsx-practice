@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { cloneDeep } from "lodash";
+import * as XLSX from "xlsx";
 
 import ProductList from "./dummyData/ProductList";
 import GameCharacters from "./dummyData/GameCharacter";
 import CustomerOrders from "./dummyData/CustomerOrderList";
-import ProductListTable from "./Components/ProductListTable";
-import GameCharactersTable from "./Components/GameCharactersTable";
-import CustomerOrderListTable from "./Components/CustomerOrderListTable";
 import DataTable from "./Components/DataTable";
+import { excelDownload } from "./utils/excelDownload";
 
 const selectableKeys: Record<TKey, string> = {
   productList: "상품 목록",
@@ -62,19 +61,50 @@ function App() {
     setSelectedKey(clickedKey);
   };
 
-  const makeExcelFile = () => {
+  const downloadExcelFile = () => {
+    // 1. 로딩 상태 활성화
     setIsLoading(true);
 
+    // 2. 현재 선택된 데이터의 필드 라벨 가져오기
+    const selectedLabels = dataFieldLabels[selectedKey];
+
+    // 3. 현재 선택된 데이터 가져오기
     const selectedData = data[selectedKey];
 
-    const rows = selectedData.reduce((acc: string[][], datum) => {
-      const row = Object.values(datum);
-      acc.push(row);
+    /* electedData 값 예시: [
+      {
+        id: "P1001",
+        productName: "무선 블루투스 이어폰",
+        category: "전자기기",
+        price: 129000,
+        stock: 50,
+        registeredDate: "2024-02-20",
+      }
+      ...
+    ]
+    */
 
-      return acc;
-    }, []);
+    // 4. 데이터 가공 (각 행 데이터를 배열로 변환)
+    const rows: string[][] = selectedData.map((datum) =>
+      Object.values(datum).slice(1)
+    );
 
-    const columnHeader = setIsLoading(false);
+    // 5. 컬럼 헤더 가져오기
+    const columnHeaders = Object.values(selectedLabels);
+
+    // 6. 엑셀 파일 생성
+    const book = XLSX.utils.book_new(); // 새 엑셀 문서 생성
+    const column = XLSX.utils.aoa_to_sheet([[...columnHeaders], ...rows]); // 데이터 시트 생성
+    XLSX.utils.book_append_sheet(book, column); // 문서에 시트 추가
+
+    // 7. 파일명 설정
+    const fileName = `엑셀_다운로드_${new Date().toISOString().slice(0, 10)}`;
+
+    // 8. 파일 다운로드 실행
+    excelDownload({ excelTemplate: book, fileName });
+
+    // 9. 로딩 상태 비활성화
+    setIsLoading(false);
   };
 
   return (
@@ -99,7 +129,7 @@ function App() {
           disabled={isLoading}
           onClick={(e) => {
             e.preventDefault();
-            makeExcelFile();
+            downloadExcelFile();
           }}
         >
           엑셀 다운로드

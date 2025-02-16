@@ -43,7 +43,7 @@ const dataFieldLabels: Record<TKey, Record<string, string>> = {
   },
 };
 
-interface IData {
+export interface IData {
   productList: IProduct[];
   gamecharacters: IGameCharacter[];
   customerOrderList: ICustomerOrder[];
@@ -61,6 +61,19 @@ function App() {
 
   const handleChangeSelectedKey = (clickedKey: TKey) => {
     setSelectedKey(clickedKey);
+  };
+
+  const handleUpdateData = ({
+    dataKey,
+    updatedData,
+  }: {
+    dataKey: TKey;
+    updatedData: any[];
+  }) => {
+    setData((prev) => ({
+      ...prev,
+      [dataKey]: [...updatedData],
+    }));
   };
 
   const downloadExcelFile = () => {
@@ -169,7 +182,15 @@ function App() {
           />
         </div>
       </div>
-      {showModal && <ExcelUploadModal setShowModal={setShowModal} />}
+      {showModal && (
+        <ExcelUploadModal
+          selectedKey={selectedKey}
+          selectedFieldLabels={dataFieldLabels[selectedKey]}
+          setShowModal={setShowModal}
+          setIsLoading={setIsLoading}
+          handleUpdateData={handleUpdateData}
+        />
+      )}
     </>
   );
 }

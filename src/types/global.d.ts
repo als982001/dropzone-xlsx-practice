@@ -25,7 +25,7 @@ declare global {
     quantity: number;
     price: number;
     orderDate: string;
-    status: "주문 완료" | "배송 중" | "배송 완료" | "취소됨";
+    status: "주문 완료" | "배송 중" | "배송 완료" | "취소됨" | string;
   }
   type TKey = "productList" | "gamecharacters" | "customerOrderList";
 }

@@ -1,6 +1,38 @@
+import { cloneDeep, isUndefined } from "lodash";
 import { Dispatch, SetStateAction, useState } from "react";
 import Dropzone, { Accept } from "react-dropzone";
 import styled from "styled-components";
+import * as XLSX from "xlsx";
+
+import { IData } from "../App";
+
+const gameCharacterKeys: Array<keyof IGameCharacter> = [
+  "name",
+  "class",
+  "level",
+  "health",
+  "mana",
+  "attackPower",
+  "defense",
+  "creationDate",
+];
+
+const productKeys: Array<keyof IProduct> = [
+  "productName",
+  "category",
+  "price",
+  "stock",
+  "registeredDate",
+];
+
+const customerOrderKeys: Array<keyof ICustomerOrder> = [
+  "customerName",
+  "productName",
+  "quantity",
+  "price",
+  "orderDate",
+  "status",
+];
 
 const accept: Accept = {
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [
@@ -10,14 +42,148 @@ const accept: Accept = {
 };
 
 interface IProps {
+  selectedKey: TKey;
+  selectedFieldLabels: Record<string, string>;
   setShowModal: Dispatch<SetStateAction<boolean>>;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  handleUpdateData: ({
+    dataKey,
+    updatedData,
+  }: {
+    dataKey: TKey;
+    updatedData: any[];
+  }) => void;
 }
 
-export default function ExcelUploadModal({ setShowModal }: IProps) {
+export default function ExcelUploadModal({
+  selectedKey,
+  selectedFieldLabels,
+  setShowModal,
+  setIsLoading,
+  handleUpdateData,
+}: IProps) {
   const [errors, setErrors] = useState<string[]>([]);
 
-  const uploadExcel = () => {
-    console.log("uploadExcel");
+  const validExcelData = (rows: (string | number)[][]) => {
+    const validationMessages: string[] = [];
+
+    // 1. 데이터가 존재하는지 검사
+    if (rows.length === 0) {
+      return ["데이터가 없습니다."];
+    }
+
+    const labels: string[] = Object.values(selectedFieldLabels);
+
+    const excelColumnNames = rows.shift();
+
+    // 2. 데이터가 존재하는지 검사
+    if (isUndefined(excelColumnNames)) {
+      return ["데이터가 없습니다."];
+    }
+
+    // 3. 컬럼 개수가 일치하는지 검사
+    if (excelColumnNames.length !== labels.length) {
+      return ["컬럼 개수가 일치하지 않습니다."];
+    }
+
+    // 4. 컬럼명들이 일치하는지 검사
+    const isAllValidColumnNames = excelColumnNames.every((columnName) =>
+      labels.includes(columnName as string)
+    );
+
+    const isAllIncluded = labels.every((label) =>
+      excelColumnNames.includes(label)
+    );
+
+    if (isAllValidColumnNames === false || isAllIncluded === false) {
+      return ["컬럼 이름을 확인해주시기 바랍니다."];
+    }
+
+    // 5. 입력된 데이터 개수가 일치하지 않는 것이 있는지 검사
+    rows.forEach((row, rowIndex) => {
+      if (row.length !== excelColumnNames.length) {
+        validationMessages.push(
+          `${rowIndex + 2}행의 데이터 개수가 일치하지 않습니다.`
+        );
+      }
+    });
+
+    return validationMessages;
+  };
+
+  const uploadExcel = (files: File[]) => {
+    setIsLoading(true);
+    setErrors([]);
+
+    files.forEach((file) => {
+      const reader = new FileReader();
+
+      reader.readAsArrayBuffer(file);
+
+      reader.onloadstart = () => {
+        console.log("reader.onloadstart");
+      };
+
+      reader.onload = async () => {
+        try {
+          const bstr = reader.result;
+          const workbook = XLSX.read(bstr, { type: "array" });
+
+          const workSheetName = workbook.SheetNames[0]; // 시트가 하나만 있다고 가정
+          const workSheet = workbook.Sheets[workSheetName];
+
+          const rows: string[][] = XLSX.utils.sheet_to_json(workSheet, {
+            header: 1,
+            blankrows: false,
+          });
+
+          const tempErrors = validExcelData(cloneDeep(rows));
+
+          if (tempErrors.length > 0) {
+            setErrors([...tempErrors]);
+            return;
+          }
+
+          rows.shift();
+
+          const keys = (() => {
+            switch (selectedKey) {
+              case "productList":
+                return productKeys;
+              case "gamecharacters":
+                return gameCharacterKeys;
+              case "customerOrderList":
+                return customerOrderKeys;
+              default:
+                return customerOrderKeys;
+            }
+          })();
+
+          const updatedData = rows.map((row, rowIndex) => {
+            const updatedDatum = row.reduce((acc, datum, index) => {
+              const key = keys[index];
+
+              acc[key] = datum;
+
+              return acc;
+            }, {});
+
+            updatedDatum.id = String(rowIndex);
+            return updatedDatum;
+          });
+
+          handleUpdateData({ dataKey: selectedKey, updatedData });
+
+          console.log(updatedData);
+        } catch (error) {
+          console.error(error);
+        } finally {
+          console.log("finally");
+        }
+      };
+    });
+
+    setIsLoading(false);
   };
 
   return (

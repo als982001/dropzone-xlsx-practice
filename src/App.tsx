@@ -7,6 +7,7 @@ import GameCharacters from "./dummyData/GameCharacter";
 import CustomerOrders from "./dummyData/CustomerOrderList";
 import DataTable from "./Components/DataTable";
 import { excelDownload } from "./utils/excelDownload";
+import ExcelUploadModal from "./Components/ExcelUploadModal";
 
 const selectableKeys: Record<TKey, string> = {
   productList: "상품 목록",
@@ -56,6 +57,7 @@ function App() {
     gamecharacters: cloneDeep(GameCharacters),
     customerOrderList: cloneDeep(CustomerOrders),
   });
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const handleChangeSelectedKey = (clickedKey: TKey) => {
     setSelectedKey(clickedKey);
@@ -108,40 +110,67 @@ function App() {
   };
 
   return (
-    <div>
+    <>
       <div>
-        <div>
-          {Object.keys(selectableKeys).map((selectableKey) => (
-            <div key={selectableKey}>
-              <button
-                disabled={isLoading}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleChangeSelectedKey(selectableKey as TKey);
-                }}
-              >
-                {selectableKeys[selectableKey as keyof typeof selectableKeys]}
-              </button>
-            </div>
-          ))}
-        </div>
-        <button
-          disabled={isLoading}
-          onClick={(e) => {
-            e.preventDefault();
-            downloadExcelFile();
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "20px",
           }}
         >
-          엑셀 다운로드
-        </button>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+            }}
+          >
+            {Object.keys(selectableKeys).map((selectableKey) => (
+              <div key={selectableKey}>
+                <button
+                  disabled={isLoading}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleChangeSelectedKey(selectableKey as TKey);
+                  }}
+                >
+                  {selectableKeys[selectableKey as keyof typeof selectableKeys]}
+                </button>
+              </div>
+            ))}
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <button
+              disabled={isLoading}
+              onClick={(e) => {
+                e.preventDefault();
+                setShowModal(true);
+              }}
+            >
+              엑셀 업로드
+            </button>
+            <button
+              disabled={isLoading}
+              onClick={(e) => {
+                e.preventDefault();
+                downloadExcelFile();
+              }}
+            >
+              엑셀 다운로드
+            </button>
+          </div>
+        </div>
+        <div>
+          <DataTable
+            selectedFieldLabels={dataFieldLabels[selectedKey]}
+            selectedData={data[selectedKey]}
+          />
+        </div>
       </div>
-      <div>
-        <DataTable
-          selectedFieldLabels={dataFieldLabels[selectedKey]}
-          selectedData={data[selectedKey]}
-        />
-      </div>
-    </div>
+      {showModal && <ExcelUploadModal setShowModal={setShowModal} />}
+    </>
   );
 }
 

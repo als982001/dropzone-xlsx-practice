@@ -46,12 +46,12 @@ interface IProps {
   selectedFieldLabels: Record<string, string>;
   setShowModal: Dispatch<SetStateAction<boolean>>;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  handleUpdateData: ({
+  handleUpdateData: <T extends keyof IData>({
     dataKey,
     updatedData,
   }: {
-    dataKey: TKey;
-    updatedData: any[];
+    dataKey: T;
+    updatedData: IData[T];
   }) => void;
 }
 
@@ -160,30 +160,35 @@ export default function ExcelUploadModal({
           })();
 
           const updatedData = rows.map((row, rowIndex) => {
-            const updatedDatum = row.reduce((acc, datum, index) => {
-              const key = keys[index];
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const updatedDatum = row.reduce<Record<string, any>>(
+              (acc, datum, index) => {
+                const key = keys[index];
+                acc[key] = datum;
 
-              acc[key] = datum;
-
-              return acc;
-            }, {});
+                return acc;
+              },
+              {}
+            );
 
             updatedDatum.id = String(rowIndex);
-            return updatedDatum;
-          });
 
-          handleUpdateData({ dataKey: selectedKey, updatedData });
+            return updatedDatum;
+          }) as IData[TKey];
+
+          handleUpdateData({
+            dataKey: selectedKey,
+            updatedData,
+          });
 
           console.log(updatedData);
         } catch (error) {
           console.error(error);
         } finally {
-          console.log("finally");
+          setIsLoading(false);
         }
       };
     });
-
-    setIsLoading(false);
   };
 
   return (

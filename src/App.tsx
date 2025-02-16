@@ -63,12 +63,12 @@ function App() {
     setSelectedKey(clickedKey);
   };
 
-  const handleUpdateData = ({
+  const handleUpdateData = <T extends keyof IData>({
     dataKey,
     updatedData,
   }: {
-    dataKey: TKey;
-    updatedData: any[];
+    dataKey: T;
+    updatedData: IData[T]; // 정확한 타입 매칭
   }) => {
     setData((prev) => ({
       ...prev,

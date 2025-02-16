@@ -186,6 +186,7 @@ export default function ExcelUploadModal({
           console.error(error);
         } finally {
           setIsLoading(false);
+          setShowModal(false);
         }
       };
     });
